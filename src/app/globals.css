@@ -1,0 +1,82 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-panel: var(--panel);
+  --color-border: var(--border-color);
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+  --color-accent-bio: var(--accent-bio);
+  --color-accent-contamination: var(--accent-contamination);
+  --color-accent-water: var(--accent-water);
+  --color-accent-warning: var(--accent-warning);
+  --color-accent-neutral: var(--accent-neutral);
+  --font-serif: "Georgia", "Cambria", "Times New Roman", serif;
+  --font-sans: "Inter", system-ui, -apple-system, "Segoe UI", "Roboto", "Helvetica Neue", "Arial", sans-serif;
+}
+
+:root {
+  --background: #0a0a0b;
+  --surface: #141417;
+  --panel: #1c1c21;
+  --border-color: #2a2a32;
+  --foreground: #e8e4df;
+  --text-primary: #e8e4df;
+  --text-secondary: #9a9696;
+  --text-muted: #6b6767;
+  --accent-bio: #6b8f71;
+  --accent-contamination: #c4784a;
+  --accent-water: #7a9eb5;
+  --accent-warning: #b5924a;
+  --accent-neutral: #8a8a96;
+}
+
+* {
+  border-color: var(--border-color);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* Selection */
+::selection {
+  background: rgba(122, 158, 181, 0.25);
+  color: var(--text-primary);
+}
+
+/* MapLibre overrides */
+.maplibregl-map {
+  font-family: var(--font-sans), system-ui, sans-serif !important;
+}
+
+.maplibregl-ctrl-attrib {
+  opacity: 0.4;
+  font-size: 10px !important;
+}
