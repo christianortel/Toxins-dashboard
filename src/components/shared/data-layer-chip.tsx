@@ -21,12 +21,17 @@ export function DataLayerChip({
     <button
       onClick={onClick}
       className={cn(
-        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-xs transition-all duration-200",
+        "inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] tracking-wide transition-all duration-200 active:scale-95",
         selected
           ? "border-border bg-panel text-text-primary"
-          : "border-transparent bg-surface text-text-muted hover:border-border hover:text-text-secondary",
+          : "border-border/60 bg-surface text-text-muted hover:border-border hover:text-text-secondary",
         className
       )}
+      style={
+        selected
+          ? { boxShadow: `0 0 12px 0 ${color}20, 0 1px 3px 0 ${color}10` }
+          : undefined
+      }
     >
       <span
         className={cn(

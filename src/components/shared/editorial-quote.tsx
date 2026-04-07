@@ -10,19 +10,27 @@ interface EditorialQuoteProps {
 export function EditorialQuote({
   quote,
   attribution,
-  accentColor = "var(--accent-water)",
+  accentColor,
   className,
 }: EditorialQuoteProps) {
+  const gradientStart = accentColor || "var(--accent-water)";
+
   return (
     <blockquote
-      className={cn("border-l-2 py-1 pl-6", className)}
-      style={{ borderColor: accentColor }}
+      className={cn("relative py-1 pl-6", className)}
     >
-      <p className="font-serif text-lg italic leading-relaxed text-text-primary md:text-xl">
+      {/* Gradient left border */}
+      <div
+        className="absolute left-0 top-0 h-full w-[2px] rounded-full"
+        style={{
+          background: `linear-gradient(to bottom, ${gradientStart}, var(--accent-bio))`,
+        }}
+      />
+      <p className="font-serif text-xl italic leading-[1.5] text-foreground/85 md:text-2xl">
         {quote}
       </p>
       {attribution && (
-        <footer className="mt-3 text-xs uppercase tracking-widest text-text-muted">
+        <footer className="mt-4 text-[11px] uppercase tracking-[0.1em] text-text-muted">
           &mdash; {attribution}
         </footer>
       )}

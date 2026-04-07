@@ -21,21 +21,39 @@ export function TimelineShell() {
     >
       <div
         className={cn(
-          "rounded-lg border border-border bg-panel/90 backdrop-blur-md",
-          "px-6 py-3"
+          "rounded-xl border border-border glass",
+          "px-8 py-3"
         )}
       >
-        {/* Year display */}
-        <div className="mb-2 flex items-center justify-between">
+        {/* Header row */}
+        <div className="mb-3 flex items-center justify-between">
           <span className="text-[10px] uppercase tracking-widest text-text-muted">
             Timeline
           </span>
-          <span className="tabular-nums text-sm font-semibold text-accent-water">
+          <span className="tabular-nums text-lg font-light font-serif text-accent-water">
             {timelineYear}
           </span>
         </div>
 
-        {/* Range slider */}
+        {/* Tick marks above slider */}
+        <div className="relative h-2 mb-1">
+          {KEY_YEARS.map((year) => {
+            const yearPct =
+              ((year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+            return (
+              <div
+                key={year}
+                className="absolute top-0 w-px bg-text-muted/40"
+                style={{
+                  left: `${yearPct}%`,
+                  height: "8px",
+                }}
+              />
+            );
+          })}
+        </div>
+
+        {/* Range slider — uses global .range-slider class */}
         <div className="relative">
           <input
             type="range"
@@ -43,7 +61,7 @@ export function TimelineShell() {
             max={MAX_YEAR}
             value={timelineYear}
             onChange={(e) => setTimelineYear(Number(e.target.value))}
-            className="timeline-slider w-full"
+            className="range-slider w-full relative z-[1]"
             aria-label="Timeline year"
           />
           {/* Track fill overlay */}
@@ -54,7 +72,7 @@ export function TimelineShell() {
         </div>
 
         {/* Key year markers */}
-        <div className="relative mt-1.5 flex justify-between">
+        <div className="relative mt-2 flex justify-between">
           {KEY_YEARS.map((year) => {
             const yearPct =
               ((year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
@@ -63,7 +81,8 @@ export function TimelineShell() {
                 key={year}
                 onClick={() => setTimelineYear(year)}
                 className={cn(
-                  "text-[9px] tabular-nums transition-colors",
+                  "text-[10px] tabular-nums transition-all duration-200",
+                  "hover:underline hover:underline-offset-2",
                   timelineYear === year
                     ? "text-accent-water font-medium"
                     : "text-text-muted hover:text-text-secondary"
@@ -81,51 +100,7 @@ export function TimelineShell() {
         </div>
 
         {/* Spacer for key year labels */}
-        <div className="h-4" />
-
-        {/* Custom slider styles */}
-        <style jsx>{`
-          .timeline-slider {
-            -webkit-appearance: none;
-            appearance: none;
-            height: 2px;
-            background: var(--border);
-            border-radius: 1px;
-            outline: none;
-            cursor: pointer;
-            position: relative;
-            z-index: 1;
-          }
-          .timeline-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-water);
-            border: 2px solid var(--panel);
-            box-shadow: 0 0 0 1px var(--accent-water), 0 2px 8px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-            transition: transform 0.15s ease;
-          }
-          .timeline-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.2);
-          }
-          .timeline-slider::-moz-range-thumb {
-            width: 14px;
-            height: 14px;
-            border-radius: 50%;
-            background: var(--accent-water);
-            border: 2px solid var(--panel);
-            box-shadow: 0 0 0 1px var(--accent-water), 0 2px 8px rgba(0, 0, 0, 0.4);
-            cursor: pointer;
-          }
-          .timeline-slider::-moz-range-track {
-            height: 2px;
-            background: var(--border);
-            border-radius: 1px;
-          }
-        `}</style>
+        <div className="h-5" />
       </div>
     </div>
   );

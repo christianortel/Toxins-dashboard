@@ -22,7 +22,7 @@ export default function CaseStudiesPage() {
       <PageContainer>
         <div className="max-w-4xl">
           <h1 className="font-serif text-4xl font-light tracking-tight text-foreground md:text-5xl lg:text-6xl">
-            Case Studies
+            Investigations
           </h1>
           <p className="mt-6 max-w-2xl text-lg leading-relaxed text-text-secondary">
             Investigative deep-dives into the places where industrial
@@ -31,25 +31,31 @@ export default function CaseStudiesPage() {
             layers, grading the strength of what is known and what remains
             uncertain.
           </p>
+          <div className="mt-2 h-px w-16 bg-accent-water/40" />
         </div>
 
-        <div className="mt-16 grid gap-8 md:grid-cols-2">
+        {/* Count */}
+        <p className="mt-14 text-xs uppercase tracking-widest text-text-muted">
+          {mockCaseStudies.length} investigations
+        </p>
+
+        <div className="mt-4 grid gap-8 md:grid-cols-2">
           {mockCaseStudies.map((study) => (
             <Link
               key={study.slug}
               href={`/case-studies/${study.slug}`}
               className="group block"
             >
-              <article className="relative overflow-hidden rounded-lg border border-border bg-surface transition-colors duration-300 hover:border-border/80 hover:bg-surface/80">
+              <article className="relative overflow-hidden rounded-lg border border-border bg-surface transition-all duration-300 hover:border-border/80 hover:bg-surface/80 hover:shadow-[0_4px_24px_0_rgba(0,0,0,0.12)]">
                 {/* Colored top bar */}
                 <div
-                  className="h-[2px] w-full"
+                  className="h-[3px] w-full rounded-t-lg"
                   style={{
                     background: getGradientForGroups(study.layerGroups),
                   }}
                 />
 
-                <div className="p-6 md:p-8">
+                <div className="p-8">
                   <div className="mb-4 flex items-center gap-3">
                     <span className="text-[10px] uppercase tracking-widest text-text-muted">
                       {study.location}
@@ -73,7 +79,7 @@ export default function CaseStudiesPage() {
                     <span className="uppercase tracking-widest">
                       Read investigation
                     </span>
-                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1" />
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1.5" />
                   </div>
                 </div>
               </article>

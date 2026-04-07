@@ -8,16 +8,16 @@ export const fadeIn: Variants = {
   hidden: { opacity: 0 },
   visible: {
     opacity: 1,
-    transition: { duration: 0.6, ease: easeExpressive },
+    transition: { duration: 0.8, ease: easeExpressive },
   },
 };
 
 export const fadeInUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 0, y: 28 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: { duration: 0.7, ease: easeExpressive },
+    transition: { duration: 0.9, ease: easeExpressive },
   },
 };
 
@@ -31,11 +31,11 @@ export const fadeInDown: Variants = {
 };
 
 export const blurReveal: Variants = {
-  hidden: { opacity: 0, filter: "blur(8px)" },
+  hidden: { opacity: 0, filter: "blur(12px)" },
   visible: {
     opacity: 1,
     filter: "blur(0px)",
-    transition: { duration: 0.8, ease: easeExpressive },
+    transition: { duration: 1.0, ease: easeExpressive },
   },
 };
 
@@ -44,8 +44,8 @@ export const staggerContainer: Variants = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1,
+      staggerChildren: 0.12,
+      delayChildren: 0.15,
     },
   },
 };
@@ -55,6 +55,39 @@ export const scaleIn: Variants = {
   visible: {
     opacity: 1,
     scale: 1,
+    transition: { duration: 0.6, ease: easeExpressive },
+  },
+};
+
+export const slideInRight: Variants = {
+  hidden: { x: 40, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
     transition: { duration: 0.5, ease: easeExpressive },
   },
+};
+
+export const slideInLeft: Variants = {
+  hidden: { x: -40, opacity: 0 },
+  visible: {
+    x: 0,
+    opacity: 1,
+    transition: { duration: 0.5, ease: easeExpressive },
+  },
+};
+
+export const panelReveal: Variants = {
+  hidden: { opacity: 0, scale: 0.98, filter: "blur(4px)" },
+  visible: {
+    opacity: 1,
+    scale: 1,
+    filter: "blur(0px)",
+    transition: { duration: 0.5, ease: easeExpressive },
+  },
+};
+
+export const hoverLift = {
+  y: -2,
+  transition: { duration: 0.3, ease: easeExpressive },
 };

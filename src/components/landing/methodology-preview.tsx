@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { fadeIn } from "@/lib/motion";
+import { fadeIn, fadeInUp } from "@/lib/motion";
 import { EVIDENCE_LEVELS } from "@/lib/constants";
 import type { EvidenceLevel } from "@/types";
 
@@ -23,8 +23,17 @@ export function MethodologyPreview() {
   ][];
 
   return (
-    <section className="bg-surface">
-      <div className="mx-auto max-w-6xl px-6 py-24 md:py-32">
+    <section className="relative bg-surface">
+      {/* Gradient transition from background to surface */}
+      <div
+        className="absolute top-0 left-0 right-0 h-24 pointer-events-none"
+        style={{
+          background:
+            "linear-gradient(to bottom, var(--background) 0%, var(--surface) 100%)",
+        }}
+      />
+
+      <div className="mx-auto max-w-6xl px-6 py-28 md:py-36">
         <motion.div
           variants={fadeIn}
           initial="hidden"
@@ -35,6 +44,9 @@ export function MethodologyPreview() {
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground tracking-tight">
             How to read this project
           </h2>
+          <p className="mt-3 text-text-secondary text-lg">
+            Every data layer carries an evidence grade
+          </p>
           <p className="mt-6 text-text-secondary leading-relaxed">
             Not all data carries the same weight. We grade every data layer by
             the strength of its evidence so you can distinguish a peer-reviewed
@@ -48,26 +60,34 @@ export function MethodologyPreview() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-60px" }}
           transition={{ duration: 0.7, delay: 0.2 }}
-          className="mt-14"
+          className="mt-14 flex flex-col gap-3"
         >
-          <div className="flex flex-wrap gap-6 md:gap-10">
-            {levels.map(([key, level]) => (
-              <div key={key} className="flex items-start gap-3 min-w-[160px]">
-                <span
-                  className="mt-1.5 block w-2 h-2 rounded-full shrink-0"
-                  style={{ backgroundColor: levelColors[key] }}
-                />
-                <div>
-                  <p className="text-sm font-medium text-text-primary">
-                    {level.label}
-                  </p>
-                  <p className="mt-1 text-xs text-text-muted leading-relaxed max-w-[200px]">
-                    {level.description}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+          {levels.map(([key, level]) => (
+            <div
+              key={key}
+              className={cn(
+                "flex flex-col md:flex-row md:items-center gap-3 md:gap-6",
+                "bg-panel border border-border rounded-lg px-6 py-5"
+              )}
+            >
+              {/* Colored left border */}
+              <div
+                className="hidden md:block w-[3px] self-stretch rounded-full shrink-0"
+                style={{ backgroundColor: levelColors[key] }}
+              />
+              {/* Dot for mobile */}
+              <span
+                className="block md:hidden w-2 h-2 rounded-full shrink-0"
+                style={{ backgroundColor: levelColors[key] }}
+              />
+              <p className="text-sm font-medium text-text-primary min-w-[120px] shrink-0">
+                {level.label}
+              </p>
+              <p className="text-sm text-text-muted leading-relaxed">
+                {level.description}
+              </p>
+            </div>
+          ))}
         </motion.div>
 
         <motion.div
@@ -79,10 +99,20 @@ export function MethodologyPreview() {
         >
           <Link
             href="/methodology"
-            className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors duration-300"
+            className={cn(
+              "group inline-flex items-center gap-2.5 px-6 py-3",
+              "border border-border rounded-sm",
+              "font-sans text-xs uppercase",
+              "text-text-secondary",
+              "transition-all duration-500 ease-out",
+              "hover:border-accent-water/50",
+              "hover:text-text-primary",
+              "hover:shadow-[0_0_20px_-6px_rgba(122,158,181,0.12)]"
+            )}
+            style={{ letterSpacing: "0.15em" }}
           >
             Read full methodology
-            <ArrowRight className="w-4 h-4" />
+            <ArrowRight className="w-3.5 h-3.5 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </div>

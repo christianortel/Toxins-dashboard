@@ -1,11 +1,14 @@
 "use client";
 
+import { useRef } from "react";
 import { Search, X } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { useExploreStore } from "@/stores/explore-store";
 
 export function SearchControl() {
   const { searchQuery, setSearchQuery } = useExploreStore();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   return (
     <div
@@ -17,32 +20,60 @@ export function SearchControl() {
     >
       <div
         className={cn(
-          "flex items-center gap-2.5 rounded-lg border border-border",
-          "bg-panel/90 backdrop-blur-md px-3.5 py-2.5",
-          "focus-within:border-accent-water/40 transition-colors"
+          "group/search flex items-center gap-2.5 rounded-xl border border-border",
+          "glass px-4 py-3",
+          "focus-within:border-accent-water/30 transition-all duration-300",
+          "focus-within:shadow-[0_0_0_3px_rgba(122,158,181,0.08)]"
         )}
       >
-        <Search className="h-4 w-4 flex-shrink-0 text-text-muted" />
+        <Search
+          className={cn(
+            "h-4 w-4 flex-shrink-0 transition-colors duration-200",
+            "text-text-muted group-focus-within/search:text-accent-water"
+          )}
+        />
         <input
+          ref={inputRef}
+          data-search-input
           type="text"
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search locations, chemicals, facilities..."
           className={cn(
-            "flex-1 bg-transparent text-sm text-foreground",
+            "flex-1 bg-transparent text-[13px] text-foreground",
             "placeholder:text-text-muted",
             "outline-none"
           )}
         />
-        {searchQuery && (
-          <button
-            onClick={() => setSearchQuery("")}
-            className="flex-shrink-0 rounded-md p-0.5 text-text-muted hover:text-foreground transition-colors"
-            aria-label="Clear search"
-          >
-            <X className="h-3.5 w-3.5" />
-          </button>
+
+        {/* "/" shortcut hint when empty */}
+        {!searchQuery && (
+          <span className="hidden md:flex items-center gap-1.5 text-text-muted/50 select-none">
+            <kbd className="inline-flex items-center justify-center rounded border border-border/50 bg-surface/50 px-1.5 py-0.5 font-mono text-[9px] text-text-muted/60">
+              /
+            </kbd>
+          </span>
         )}
+
+        {/* Clear button with scale transition */}
+        <AnimatePresence>
+          {searchQuery && (
+            <motion.button
+              initial={{ scale: 0.6, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.6, opacity: 0 }}
+              transition={{ duration: 0.15 }}
+              onClick={() => {
+                setSearchQuery("");
+                inputRef.current?.focus();
+              }}
+              className="flex-shrink-0 rounded-md p-1 text-text-muted hover:text-foreground hover:bg-surface/60 transition-colors"
+              aria-label="Clear search"
+            >
+              <X className="h-3.5 w-3.5" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );

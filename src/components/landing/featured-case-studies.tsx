@@ -17,7 +17,7 @@ export function FeaturedCaseStudies() {
   const studies = mockCaseStudies.slice(0, 3);
 
   return (
-    <section className="px-6 py-24 md:py-32">
+    <section className="px-6 py-28 md:py-36">
       <div className="mx-auto max-w-6xl">
         <motion.div
           initial={{ opacity: 0, y: 16 }}
@@ -26,11 +26,10 @@ export function FeaturedCaseStudies() {
           transition={{ duration: 0.7 }}
         >
           <h2 className="font-serif text-3xl md:text-4xl font-light text-foreground tracking-tight">
-            Case Studies
+            Investigations
           </h2>
-          <p className="mt-4 text-text-secondary max-w-2xl">
-            In-depth investigations into contamination, health signals, and
-            regulatory gaps
+          <p className="mt-4 text-text-secondary max-w-2xl leading-relaxed">
+            Where contamination, biology, and policy converge
           </p>
         </motion.div>
 
@@ -50,20 +49,25 @@ export function FeaturedCaseStudies() {
                   href={`/case-studies/${study.slug}`}
                   className={cn(
                     "group block bg-surface border border-border rounded-lg overflow-hidden",
-                    "transition-colors duration-300 hover:border-border/80 h-full"
+                    "transition-all duration-500 hover:border-border/70 h-full"
                   )}
+                  style={
+                    {
+                      "--card-color": primaryColor,
+                    } as React.CSSProperties
+                  }
                 >
                   {/* Colored top bar */}
                   <div
-                    className="h-[2px] w-full"
+                    className="h-[3px] w-full transition-shadow duration-500 group-hover:shadow-[0_2px_16px_-2px_var(--card-color)]"
                     style={{ backgroundColor: primaryColor }}
                   />
 
-                  <div className="p-6 flex flex-col h-full">
-                    <h3 className="font-serif text-xl text-foreground group-hover:text-accent-water transition-colors duration-300">
+                  <div className="p-8 flex flex-col h-full">
+                    <h3 className="font-serif text-2xl font-light text-foreground/90 group-hover:text-foreground transition-colors duration-300">
                       {study.title}
                     </h3>
-                    <p className="mt-2 text-sm text-text-secondary leading-relaxed">
+                    <p className="mt-3 text-sm text-text-secondary leading-relaxed">
                       {study.subtitle}
                     </p>
                     <p className="mt-3 text-xs text-text-muted">
@@ -88,10 +92,14 @@ export function FeaturedCaseStudies() {
                       ))}
                     </div>
 
-                    {/* Evidence badge */}
-                    <div className="mt-auto pt-5">
+                    {/* Evidence badge and Read label */}
+                    <div className="mt-auto pt-6 flex items-center justify-between">
                       <span className="inline-block text-[11px] uppercase tracking-wider text-text-muted border border-border rounded px-2 py-0.5">
                         {EVIDENCE_LEVELS[study.evidenceLevel].label}
+                      </span>
+                      <span className="inline-flex items-center gap-1.5 text-xs text-text-muted opacity-0 translate-x-[-4px] group-hover:opacity-70 group-hover:translate-x-0 transition-all duration-400">
+                        Read
+                        <ArrowRight className="w-3 h-3" />
                       </span>
                     </div>
                   </div>
@@ -106,14 +114,16 @@ export function FeaturedCaseStudies() {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="mt-12 text-center"
+          className="mt-14 flex flex-col items-center gap-5"
         >
+          {/* Subtle horizontal line */}
+          <div className="h-px w-16 bg-border" />
           <Link
             href="/case-studies"
-            className="inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors duration-300"
+            className="group inline-flex items-center gap-2 text-sm text-text-secondary hover:text-text-primary transition-colors duration-300"
           >
-            View all case studies
-            <ArrowRight className="w-4 h-4" />
+            View all investigations
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1" />
           </Link>
         </motion.div>
       </div>

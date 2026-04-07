@@ -30,23 +30,33 @@ export default function SourcesPage() {
           </p>
         </div>
 
+        {/* Filter count summary */}
+        <p className="mt-14 text-xs uppercase tracking-widest text-text-muted">
+          {mockSources.length} verified data sources
+        </p>
+
         {/* Source cards */}
-        <div className="mt-16 grid gap-6 md:grid-cols-2">
+        <div className="mt-4 grid gap-6 md:grid-cols-2">
           {mockSources.map((source) => {
             const layerGroup = LAYER_GROUPS[source.layerGroup];
 
             return (
               <article
                 key={source.id}
-                className="group relative overflow-hidden rounded-lg border border-border bg-surface"
+                className="group relative overflow-hidden rounded-lg border border-border bg-surface transition-all duration-300 hover:shadow-[0_4px_24px_0_rgba(0,0,0,0.12)]"
+                style={
+                  {
+                    "--layer-color": layerGroup.color,
+                  } as React.CSSProperties
+                }
               >
                 {/* Colored top bar */}
                 <div
-                  className="h-[2px] w-full"
+                  className="h-[3px] w-full rounded-t-lg"
                   style={{ background: layerGroup.color }}
                 />
 
-                <div className="p-6">
+                <div className="p-6 transition-colors duration-300 group-hover:border-[var(--layer-color)]">
                   {/* Agency & layer chip */}
                   <div className="mb-4 flex items-center justify-between gap-3">
                     {source.agency && (
@@ -77,11 +87,11 @@ export default function SourcesPage() {
                   </p>
 
                   {/* Caveats */}
-                  <div className="mt-4 rounded border border-border/50 bg-panel/40 px-4 py-3">
+                  <div className="mt-4 rounded border border-amber-900/10 bg-amber-950/5 px-4 py-3">
                     <p className="text-[10px] uppercase tracking-widest text-text-muted">
                       Known caveats
                     </p>
-                    <p className="mt-1 text-xs leading-relaxed text-text-muted">
+                    <p className="mt-1 text-xs italic leading-relaxed text-text-muted">
                       {source.caveats}
                     </p>
                   </div>

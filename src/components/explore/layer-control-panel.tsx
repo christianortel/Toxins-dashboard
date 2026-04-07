@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Layers, ChevronLeft, ChevronRight } from "lucide-react";
+import { Layers, ChevronLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { LAYER_GROUPS } from "@/lib/constants";
 import { useExploreStore } from "@/stores/explore-store";
@@ -19,37 +19,37 @@ export function LayerControlPanel() {
   const [collapsed, setCollapsed] = useState(false);
   const { activeGroups, toggleGroup } = useExploreStore();
 
+  const allActive = activeGroups.size === layerGroupEntries.length;
+
   return (
     <>
-      {/* Mobile / collapsed toggle */}
+      {/* Mobile / collapsed toggle -- styled as floating pill */}
       <button
         onClick={() => setCollapsed((c) => !c)}
         className={cn(
-          "absolute left-4 top-4 z-20 flex h-10 w-10 items-center justify-center",
-          "rounded-lg border border-border bg-panel/95 backdrop-blur-md",
+          "absolute left-4 top-4 z-10 flex items-center gap-2",
+          "rounded-full border border-border glass",
+          "px-4 py-2.5",
           "text-text-secondary hover:text-foreground transition-colors",
           !collapsed && "md:hidden"
         )}
         aria-label={collapsed ? "Show data layers" : "Hide data layers"}
       >
-        {collapsed ? (
-          <ChevronRight className="h-4 w-4" />
-        ) : (
-          <ChevronLeft className="h-4 w-4" />
-        )}
+        <Layers className="h-3.5 w-3.5" />
+        <span className="text-[11px] font-medium tracking-wide">Layers</span>
       </button>
 
       <AnimatePresence>
         {!collapsed && (
           <motion.aside
-            initial={{ x: -288, opacity: 0 }}
+            initial={{ x: -288, opacity: 0.5 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: -288, opacity: 0 }}
-            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            exit={{ x: -288, opacity: 0.5 }}
+            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
             className={cn(
               "absolute left-4 top-4 bottom-4 z-10 w-72",
               "flex flex-col overflow-hidden",
-              "rounded-lg border border-border bg-panel/95 backdrop-blur-md"
+              "rounded-xl border border-border glass"
             )}
           >
             {/* Header */}
@@ -70,74 +70,90 @@ export function LayerControlPanel() {
             </div>
 
             {/* Layer groups */}
-            <div className="flex-1 overflow-y-auto px-5 py-4 space-y-1">
-              {layerGroupEntries.map((group) => {
+            <div className="flex-1 overflow-y-auto px-3 py-3">
+              {layerGroupEntries.map((group, i) => {
                 const active = activeGroups.has(group.id);
 
                 return (
-                  <button
-                    key={group.id}
-                    onClick={() => toggleGroup(group.id)}
-                    className={cn(
-                      "group flex w-full items-start gap-3.5 rounded-md px-3 py-3 text-left transition-colors",
-                      active
-                        ? "bg-surface/80"
-                        : "hover:bg-surface/40"
-                    )}
-                  >
-                    {/* Toggle switch */}
-                    <div className="mt-0.5 flex-shrink-0">
-                      <div
-                        className={cn(
-                          "relative h-5 w-9 rounded-full transition-colors duration-200",
-                          active ? "bg-surface" : "bg-border"
-                        )}
-                      >
+                  <div key={group.id}>
+                    <button
+                      onClick={() => toggleGroup(group.id)}
+                      className={cn(
+                        "group flex w-full items-start gap-3.5 rounded-lg px-3 py-3 text-left transition-colors",
+                        active ? "bg-surface/80" : "hover:bg-surface/40"
+                      )}
+                    >
+                      {/* Toggle switch */}
+                      <div className="mt-0.5 flex-shrink-0">
                         <div
                           className={cn(
-                            "absolute top-0.5 h-4 w-4 rounded-full transition-all duration-200 shadow-sm",
-                            active ? "left-[18px]" : "left-0.5"
+                            "relative h-[22px] w-10 rounded-full transition-colors duration-300",
+                            active ? "bg-surface" : "bg-border"
                           )}
-                          style={{
-                            backgroundColor: active
-                              ? group.color
-                              : "var(--text-muted)",
-                          }}
-                        />
+                        >
+                          <div
+                            className={cn(
+                              "absolute top-[3px] h-4 w-4 rounded-full transition-all duration-300 ease-out",
+                              active ? "left-[21px]" : "left-[3px]"
+                            )}
+                            style={{
+                              backgroundColor: active
+                                ? group.color
+                                : "var(--text-muted)",
+                              boxShadow: active
+                                ? "0 1px 3px rgba(0,0,0,0.4), inset 0 1px 1px rgba(255,255,255,0.15)"
+                                : "0 1px 2px rgba(0,0,0,0.3)",
+                            }}
+                          />
+                        </div>
                       </div>
-                    </div>
 
-                    {/* Content */}
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2">
-                        <span
-                          className="h-2 w-2 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: group.color }}
-                        />
+                      {/* Content */}
+                      <div className="flex-1 min-w-0">
                         <span
                           className={cn(
                             "text-sm font-medium transition-colors",
-                            active
-                              ? "text-foreground"
-                              : "text-text-secondary"
+                            active ? "text-foreground" : "text-text-secondary"
                           )}
                         >
                           {group.label}
                         </span>
+                        <p className="mt-1 text-xs leading-relaxed text-text-secondary/70">
+                          {group.description}
+                        </p>
                       </div>
-                      <p className="mt-1 text-xs leading-relaxed text-text-muted pl-4">
-                        {group.description}
-                      </p>
-                    </div>
-                  </button>
+                    </button>
+
+                    {/* Separator between groups */}
+                    {i < layerGroupEntries.length - 1 && (
+                      <div className="h-px bg-border/50 mx-3" />
+                    )}
+                  </div>
                 );
               })}
             </div>
 
             {/* Footer */}
             <div className="border-t border-border px-5 py-3">
-              <p className="text-[10px] uppercase tracking-widest text-text-muted">
-                {activeGroups.size} of {layerGroupEntries.length} active
+              <p
+                className={cn(
+                  "text-[10px] uppercase tracking-widest text-text-muted transition-colors",
+                  allActive && "text-accent-water"
+                )}
+              >
+                {allActive ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <span className="relative flex h-1.5 w-1.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent-water opacity-75" />
+                      <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-accent-water" />
+                    </span>
+                    All layers active
+                  </span>
+                ) : (
+                  <span>
+                    {activeGroups.size} of {layerGroupEntries.length} active
+                  </span>
+                )}
               </p>
             </div>
           </motion.aside>
