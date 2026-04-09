@@ -1,9 +1,10 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { cn } from "@/lib/utils";
 import { useExploreStore } from "@/stores/explore-store";
 import { mockEntities } from "@/data/mock/entities";
+import { timelineEntries } from "@/data/mock/methodology";
 
 const MIN_YEAR = 1940;
 const MAX_YEAR = 2024;
@@ -11,6 +12,7 @@ const KEY_YEARS = [1940, 1960, 1980, 2000, 2020];
 
 export function TimelineShell() {
   const { timelineYear, setTimelineYear } = useExploreStore();
+  const [hoveredMilestone, setHoveredMilestone] = useState<number | null>(null);
 
   // Build a histogram of entity counts per year
   const histogram = useMemo(() => {
@@ -32,8 +34,21 @@ export function TimelineShell() {
     [histogram]
   );
 
+  // Filter milestones to ones that fall inside the visible range
+  const milestones = useMemo(
+    () =>
+      timelineEntries.filter(
+        (m) => m.year >= MIN_YEAR && m.year <= MAX_YEAR
+      ),
+    []
+  );
+
   const pct = ((timelineYear - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
   const visibleCount = histogram[timelineYear - MIN_YEAR] ?? 0;
+  const activeMilestone =
+    hoveredMilestone !== null
+      ? milestones.find((m) => m.year === hoveredMilestone) ?? null
+      : null;
 
   return (
     <div
@@ -58,12 +73,18 @@ export function TimelineShell() {
               {visibleCount} active
             </span>
           </div>
-          <span className="tabular-nums text-lg font-light font-serif text-accent-water">
-            {timelineYear}
-          </span>
+          {activeMilestone ? (
+            <span className="max-w-[60%] truncate text-[10px] italic text-text-secondary">
+              {activeMilestone.year} · {activeMilestone.label}
+            </span>
+          ) : (
+            <span className="tabular-nums text-lg font-light font-serif text-accent-water">
+              {timelineYear}
+            </span>
+          )}
         </div>
 
-        {/* Histogram bars */}
+        {/* Histogram bars with milestone overlay */}
         <div className="relative h-6 mb-1 flex items-end gap-px">
           {histogram.map((count, idx) => {
             const year = MIN_YEAR + idx;
@@ -84,6 +105,33 @@ export function TimelineShell() {
                 }}
                 title={`${year}: ${count}`}
               />
+            );
+          })}
+
+          {/* Milestone tick marks — positioned absolute over histogram */}
+          {milestones.map((m) => {
+            const mPct = ((m.year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+            const isHovered = hoveredMilestone === m.year;
+            return (
+              <button
+                key={m.year}
+                type="button"
+                onClick={() => setTimelineYear(m.year)}
+                onMouseEnter={() => setHoveredMilestone(m.year)}
+                onMouseLeave={() => setHoveredMilestone(null)}
+                aria-label={`${m.year}: ${m.label}`}
+                className="absolute top-0 bottom-0 w-3 -translate-x-1/2 cursor-pointer"
+                style={{ left: `${mPct}%` }}
+              >
+                <span
+                  className={cn(
+                    "block h-full w-[1px] mx-auto transition-all duration-200",
+                    isHovered
+                      ? "bg-accent-warning shadow-[0_0_6px_rgba(181,146,74,0.8)]"
+                      : "bg-accent-warning/50"
+                  )}
+                />
+              </button>
             );
           })}
         </div>
@@ -134,8 +182,16 @@ export function TimelineShell() {
           })}
         </div>
 
-        {/* Spacer for key year labels */}
-        <div className="h-5" />
+        {/* Milestone description area (reserved space to avoid layout jump) */}
+        <div className="mt-2 h-5 text-[10px] leading-tight text-text-muted">
+          {activeMilestone ? (
+            <span className="line-clamp-1">{activeMilestone.description}</span>
+          ) : (
+            <span className="text-text-muted/40">
+              Hover milestone ticks above for historical context
+            </span>
+          )}
+        </div>
       </div>
     </div>
   );
