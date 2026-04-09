@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { CheckCircle2, XCircle } from "lucide-react";
+import { CheckCircle2, XCircle, AlertTriangle } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { PageContainer } from "@/components/layout/page-container";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -58,6 +57,29 @@ export default function MethodologyPage() {
               point and every case study by evidence level precisely because
               certainty varies and transparency matters.
             </p>
+
+            {/* In-page TOC */}
+            <nav className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-2 text-[11px] uppercase tracking-[0.15em] text-text-muted">
+              <a href="#data-layers" className="hover:text-foreground transition-colors">
+                Data Layers
+              </a>
+              <span className="text-border">·</span>
+              <a href="#evidence-levels" className="hover:text-foreground transition-colors">
+                Evidence Levels
+              </a>
+              <span className="text-border">·</span>
+              <a href="#confidence-framework" className="hover:text-foreground transition-colors">
+                Confidence Framework
+              </a>
+              <span className="text-border">·</span>
+              <a href="#uncertainty" className="hover:text-foreground transition-colors">
+                Handling Uncertainty
+              </a>
+              <span className="text-border">·</span>
+              <a href="#scientific-caution" className="hover:text-foreground transition-colors">
+                Scientific Caution
+              </a>
+            </nav>
           </div>
         </PageContainer>
       </div>
@@ -116,6 +138,121 @@ export default function MethodologyPage() {
                 </p>
               </div>
             ))}
+          </div>
+        </section>
+
+        {/* Confidence Framework */}
+        <section id="confidence-framework" className="mt-28 max-w-3xl">
+          <h2 className="font-serif text-2xl font-light tracking-tight text-foreground md:text-3xl">
+            Confidence Framework in Practice
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-text-muted">
+            Each entity in the explorer carries an evidence level. Each case
+            study carries a methodology note. Each source in the registry
+            carries an explicit list of caveats. Together, these three layers
+            form the project&rsquo;s confidence framework — a way for readers
+            to evaluate not just what we are showing, but how much trust to
+            place in it.
+          </p>
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
+            {[
+              {
+                step: "01",
+                title: "Source Provenance",
+                body: "Every data point traces to a primary, publicly accessible source. Source records include update frequency, license, and known caveats — never just the URL.",
+              },
+              {
+                step: "02",
+                title: "Evidence Tagging",
+                body: "Each entity is tagged Direct, Proxy, Screening, Literature, or Editorial. These tags travel with the data through the entire UI — they appear in the map, the drawer, the case studies.",
+              },
+              {
+                step: "03",
+                title: "Uncertainty Surfacing",
+                body: "Where reasonable people disagree — replication failures, contested epidemiology, modeled vs. measured values — we surface that disagreement rather than smooth it over.",
+              },
+            ].map(({ step, title, body }) => (
+              <div
+                key={step}
+                className="relative rounded-lg border border-border bg-surface/50 px-6 py-7"
+              >
+                <span className="absolute right-5 top-4 font-mono text-[10px] tracking-widest text-text-muted/40">
+                  {step}
+                </span>
+                <h3 className="font-serif text-lg font-light text-foreground">
+                  {title}
+                </h3>
+                <p className="mt-3 text-xs leading-relaxed text-text-muted">
+                  {body}
+                </p>
+              </div>
+            ))}
+          </div>
+        </section>
+
+        {/* Handling Uncertainty */}
+        <section id="uncertainty" className="mt-28 max-w-3xl">
+          <h2 className="font-serif text-2xl font-light tracking-tight text-foreground md:text-3xl">
+            Handling Uncertainty
+          </h2>
+          <p className="mt-3 text-sm leading-relaxed text-text-muted">
+            Environmental health data carries several distinct kinds of
+            uncertainty, each demanding a different editorial response.
+          </p>
+
+          <div className="mt-10 space-y-5">
+            {[
+              {
+                kind: "Measurement",
+                detail:
+                  "Detection limits, analytical method variation, sampling coverage gaps. We record method and detection limit alongside any concentration value, and we never silently truncate non-detects.",
+              },
+              {
+                kind: "Modeling",
+                detail:
+                  "Many federal data products (AirToxScreen, ATSDR exposure reconstructions) are modeled, not measured. We label modeled values as such and retain published confidence intervals.",
+              },
+              {
+                kind: "Causal Inference",
+                detail:
+                  "Population-level associations cannot establish individual causation. We restate this whenever a regional or epidemiological trend appears, and we never present a correlation as a finding of harm.",
+              },
+              {
+                kind: "Coverage",
+                detail:
+                  "Absence of data is not absence of risk. Counties, communities, and chemicals not tracked by federal programs are simply unseen — we say so.",
+              },
+              {
+                kind: "Temporal",
+                detail:
+                  "Most federal data is reported with a 1-3 year lag. Year fields in the explorer reflect the year of measurement, not the year of reporting, and are caveated when known to be stale.",
+              },
+            ].map(({ kind, detail }) => (
+              <div
+                key={kind}
+                className="flex gap-5 border-l-2 border-border/60 pl-5"
+              >
+                <span className="mt-0.5 flex-shrink-0 text-[10px] uppercase tracking-[0.15em] text-text-muted w-32">
+                  {kind}
+                </span>
+                <p className="flex-1 text-sm leading-relaxed text-text-secondary">
+                  {detail}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="mt-10 rounded-lg border border-amber-900/20 bg-amber-950/5 px-6 py-5">
+            <div className="flex items-start gap-3">
+              <AlertTriangle className="h-4 w-4 text-accent-warning/70 flex-shrink-0 mt-0.5" />
+              <p className="text-xs leading-relaxed text-text-muted">
+                When in doubt, we err on the side of underclaiming. The
+                purpose of DOWNSTREAM is to make environmental information
+                navigable and legible — not to score points against any
+                facility, agency, or chemical. If a data layer is too noisy
+                to interpret, we say so rather than dressing it up.
+              </p>
+            </div>
           </div>
         </section>
 

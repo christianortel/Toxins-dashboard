@@ -1,22 +1,45 @@
 "use client";
 
+import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 import { useExploreStore } from "@/stores/explore-store";
+import { mockEntities } from "@/data/mock/entities";
 
-const MIN_YEAR = 1960;
+const MIN_YEAR = 1940;
 const MAX_YEAR = 2024;
-const KEY_YEARS = [1960, 1970, 1980, 1990, 2000, 2010, 2024];
+const KEY_YEARS = [1940, 1960, 1980, 2000, 2020];
 
 export function TimelineShell() {
   const { timelineYear, setTimelineYear } = useExploreStore();
 
+  // Build a histogram of entity counts per year
+  const histogram = useMemo(() => {
+    const buckets = new Array<number>(MAX_YEAR - MIN_YEAR + 1).fill(0);
+    for (const e of mockEntities) {
+      if (e.year !== undefined) {
+        const start = Math.max(e.year, MIN_YEAR);
+        const end = Math.min(e.yearEnd ?? e.year, MAX_YEAR);
+        for (let y = start; y <= end; y++) {
+          buckets[y - MIN_YEAR] += 1;
+        }
+      }
+    }
+    return buckets;
+  }, []);
+
+  const maxCount = useMemo(
+    () => Math.max(...histogram, 1),
+    [histogram]
+  );
+
   const pct = ((timelineYear - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+  const visibleCount = histogram[timelineYear - MIN_YEAR] ?? 0;
 
   return (
     <div
       className={cn(
         "absolute bottom-4 left-1/2 z-10 -translate-x-1/2",
-        "w-full max-w-xl px-4"
+        "w-full max-w-2xl px-4"
       )}
     >
       <div
@@ -26,28 +49,40 @@ export function TimelineShell() {
         )}
       >
         {/* Header row */}
-        <div className="mb-3 flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-widest text-text-muted">
-            Timeline
-          </span>
+        <div className="mb-2 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <span className="text-[10px] uppercase tracking-widest text-text-muted">
+              Timeline
+            </span>
+            <span className="text-[10px] tabular-nums text-text-muted/70">
+              {visibleCount} active
+            </span>
+          </div>
           <span className="tabular-nums text-lg font-light font-serif text-accent-water">
             {timelineYear}
           </span>
         </div>
 
-        {/* Tick marks above slider */}
-        <div className="relative h-2 mb-1">
-          {KEY_YEARS.map((year) => {
-            const yearPct =
-              ((year - MIN_YEAR) / (MAX_YEAR - MIN_YEAR)) * 100;
+        {/* Histogram bars */}
+        <div className="relative h-6 mb-1 flex items-end gap-px">
+          {histogram.map((count, idx) => {
+            const year = MIN_YEAR + idx;
+            const h = (count / maxCount) * 100;
+            const isCurrent = year === timelineYear;
+            const isPast = year <= timelineYear;
             return (
               <div
                 key={year}
-                className="absolute top-0 w-px bg-text-muted/40"
+                className={cn(
+                  "flex-1 transition-all duration-200",
+                  isCurrent && "bg-accent-water",
+                  !isCurrent && isPast && "bg-accent-water/40",
+                  !isPast && "bg-text-muted/15"
+                )}
                 style={{
-                  left: `${yearPct}%`,
-                  height: "8px",
+                  height: count === 0 ? "1px" : `${Math.max(h, 6)}%`,
                 }}
+                title={`${year}: ${count}`}
               />
             );
           })}

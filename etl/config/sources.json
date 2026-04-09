@@ -1,0 +1,116 @@
+{
+  "version": "0.3.0",
+  "updated": "2026-04-09",
+  "sources": [
+    {
+      "id": "tri",
+      "name": "EPA Toxics Release Inventory",
+      "agency": "EPA",
+      "endpoint": "https://data.epa.gov/efservice/tri_facility/state_abbr/equals/{state}/JSON",
+      "fetcher": "fetch_tri",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "annual",
+      "format": "json",
+      "spatial": true
+    },
+    {
+      "id": "superfund",
+      "name": "EPA Superfund / NPL Sites",
+      "agency": "EPA",
+      "endpoint": "https://data.epa.gov/efservice/sems_active_sites/state/equals/{state}/JSON",
+      "fetcher": "fetch_superfund",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "quarterly",
+      "format": "json",
+      "spatial": true
+    },
+    {
+      "id": "pfas",
+      "name": "EPA UCMR 5 PFAS Occurrence",
+      "agency": "EPA Office of Water",
+      "endpoint": "https://www.epa.gov/dwucmr/occurrence-data-unregulated-contaminant-monitoring-rule",
+      "fetcher": "fetch_pfas",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "quarterly",
+      "format": "csv",
+      "spatial": true
+    },
+    {
+      "id": "sentinel",
+      "name": "USGS Wildlife Sentinel Records",
+      "agency": "USGS",
+      "endpoint": "https://www.usgs.gov/products/data-and-tools/data",
+      "fetcher": "fetch_sentinel",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "annual",
+      "format": "csv",
+      "spatial": true
+    },
+    {
+      "id": "echo",
+      "name": "EPA ECHO Enforcement & Compliance",
+      "agency": "EPA",
+      "endpoint": "https://echodata.epa.gov/echo/echo_rest_services.get_facilities",
+      "fetcher": "fetch_enforcement",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "weekly",
+      "format": "json",
+      "spatial": true
+    },
+    {
+      "id": "egrid",
+      "name": "EPA eGRID Power Plants",
+      "agency": "EPA",
+      "endpoint": "https://www.epa.gov/egrid",
+      "fetcher": "fetch_power_plants",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "annual",
+      "format": "xlsx",
+      "spatial": true
+    },
+    {
+      "id": "echo_air",
+      "name": "EPA AirToxScreen Tract Risk",
+      "agency": "EPA",
+      "endpoint": "https://www.epa.gov/AirToxScreen",
+      "fetcher": "fetch_air_toxics",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "triennial",
+      "format": "csv",
+      "spatial": true
+    },
+    {
+      "id": "wastewater",
+      "name": "EPA NPDES Wastewater Discharge Monitoring",
+      "agency": "EPA",
+      "endpoint": "https://echo.epa.gov/tools/data-downloads",
+      "fetcher": "fetch_wastewater",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "monthly",
+      "format": "csv",
+      "spatial": true
+    },
+    {
+      "id": "cdc_natality",
+      "name": "CDC WONDER Natality (Reproductive)",
+      "agency": "CDC NCHS",
+      "endpoint": "https://wonder.cdc.gov/natality.html",
+      "fetcher": "fetch_reproductive",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "annual",
+      "format": "tsv",
+      "spatial": false
+    },
+    {
+      "id": "tigerline_geo",
+      "name": "Census TIGER/Line Shapefiles",
+      "agency": "U.S. Census Bureau",
+      "endpoint": "https://www.census.gov/geographies/mapping-files/time-series/geo/tiger-line-file.html",
+      "fetcher": "load_geographies",
+      "license": "Public Domain (US Government Work)",
+      "update_frequency": "annual",
+      "format": "shapefile",
+      "spatial": true
+    }
+  ]
+}
