@@ -79,6 +79,13 @@ export function SearchControl() {
   const inputRef = useRef<HTMLInputElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeIdx, setActiveIdx] = useState(0);
+  // Track the query that activeIdx is aligned with so we can reset during
+  // render when the query changes — avoids a cascading effect-based reset.
+  const [trackedQuery, setTrackedQuery] = useState(searchQuery);
+  if (searchQuery !== trackedQuery) {
+    setTrackedQuery(searchQuery);
+    setActiveIdx(0);
+  }
 
   // Build the search index once
   const index = useMemo(() => buildSearchIndex(), []);
@@ -94,10 +101,6 @@ export function SearchControl() {
       .map((x) => x.r);
     return scored;
   }, [searchQuery, index]);
-
-  useEffect(() => {
-    setActiveIdx(0);
-  }, [searchQuery]);
 
   // Close on outside click
   useEffect(() => {

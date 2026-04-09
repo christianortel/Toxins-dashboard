@@ -1,11 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
 import { staggerContainer, fadeInUp } from "@/lib/motion";
 import { EVIDENCE_LEVELS } from "@/lib/constants";
 import { featuredStatistics } from "@/data/mock/methodology";
-import type { EvidenceLevel } from "@/types";
 
 const levelColors: Record<string, string> = {
   direct: "var(--accent-contamination)",

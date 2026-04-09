@@ -5,7 +5,7 @@ import maplibregl from "maplibre-gl";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { mockEntities } from "@/data/mock/entities";
 import { useExploreStore } from "@/stores/explore-store";
-import type { AnyMapEntity, LayerGroupId, LayerId } from "@/types";
+import type { AnyMapEntity, LayerGroupId } from "@/types";
 
 const LAYER_GROUP_COLORS: Record<LayerGroupId, string> = {
   wildlife: "#6b8f71",
@@ -254,6 +254,3 @@ export function MapShell() {
     </div>
   );
 }
-
-// Mark unused but keep for potential cluster expansion
-export type { LayerId };

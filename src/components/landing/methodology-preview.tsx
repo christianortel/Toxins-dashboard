@@ -4,7 +4,7 @@ import Link from "next/link";
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { fadeIn, fadeInUp } from "@/lib/motion";
+import { fadeIn } from "@/lib/motion";
 import { EVIDENCE_LEVELS } from "@/lib/constants";
 import type { EvidenceLevel } from "@/types";
 

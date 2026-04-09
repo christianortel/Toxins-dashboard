@@ -11,8 +11,6 @@ interface ExploreState {
 
   // Selected entity
   selectedEntityId: string | null;
-  /** @deprecated Use selectedEntityId instead. */
-  selectedSiteId: string | null;
   drawerOpen: boolean;
 
   // Search
@@ -36,8 +34,6 @@ interface ExploreState {
   toggleGroup: (id: LayerGroupId) => void;
   toggleLayer: (id: LayerId) => void;
   setSelectedEntity: (id: string | null) => void;
-  /** @deprecated Use setSelectedEntity instead. */
-  setSelectedSite: (id: string | null) => void;
   setDrawerOpen: (open: boolean) => void;
   setSearchQuery: (query: string) => void;
   setSearchResults: (results: SearchResult[]) => void;
@@ -70,7 +66,6 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
   activeLayers: new Set(DEFAULT_ACTIVE_LAYERS),
 
   selectedEntityId: null,
-  selectedSiteId: null,
   drawerOpen: false,
 
   searchQuery: "",
@@ -123,10 +118,7 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
     }),
 
   setSelectedEntity: (id) =>
-    set({ selectedEntityId: id, selectedSiteId: id, drawerOpen: id !== null }),
-
-  setSelectedSite: (id) =>
-    set({ selectedEntityId: id, selectedSiteId: id, drawerOpen: id !== null }),
+    set({ selectedEntityId: id, drawerOpen: id !== null }),
 
   setDrawerOpen: (open) => set({ drawerOpen: open }),
 
