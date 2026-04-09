@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft, MapPin, Calendar, ExternalLink } from "lucide-react";
+import { ArrowLeft, MapPin, Calendar, ExternalLink, BookOpen } from "lucide-react";
 import { SiteHeader } from "@/components/layout/site-header";
 import { PageContainer } from "@/components/layout/page-container";
 import { SiteFooter } from "@/components/layout/site-footer";
@@ -198,6 +198,20 @@ export default async function CaseStudyPage({
               })}
             </div>
           </section>
+
+          {/* Methodology note */}
+          {study.methodologyNote && (
+            <section className="mt-20">
+              <h2 className="flex items-center gap-2.5 font-serif text-2xl font-light tracking-tight text-foreground">
+                <BookOpen className="h-4 w-4 text-text-muted" />
+                Methodology Note
+              </h2>
+              <div className="mt-1 h-px w-12 bg-accent-bio opacity-40" />
+              <p className="mt-8 text-sm leading-[1.85] text-text-secondary">
+                {study.methodologyNote}
+              </p>
+            </section>
+          )}
 
           {/* Editorial disclaimer */}
           <div className="mt-20 rounded-lg border border-border bg-panel/50 px-6 py-5">

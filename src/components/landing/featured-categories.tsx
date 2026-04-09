@@ -5,14 +5,8 @@ import { ArrowRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { staggerContainer, fadeInUp } from "@/lib/motion";
 import { LAYER_GROUPS } from "@/lib/constants";
-
-const layerCounts: Record<string, number> = {
-  official: 14,
-  emerging: 8,
-  wildlife: 11,
-  reproductive: 9,
-  regulatory: 7,
-};
+import { getLayersByGroup } from "@/data/layers";
+import type { LayerGroupId } from "@/types";
 
 export function FeaturedCategories() {
   const groups = Object.values(LAYER_GROUPS);
@@ -90,7 +84,7 @@ export function FeaturedCategories() {
                 <div className="mt-6 flex items-center justify-between">
                   <p className="text-xs text-text-muted">
                     <span className="font-medium text-base tabular-nums text-text-secondary">
-                      {layerCounts[group.id]}
+                      {getLayersByGroup(group.id as LayerGroupId).length}
                     </span>{" "}
                     data layers
                   </p>
