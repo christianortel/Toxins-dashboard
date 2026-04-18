@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { MapShell } from "@/components/explore/map-shell";
+import { ThreeGlobe } from "@/components/explore/three-globe";
 import { LayerControlPanel } from "@/components/explore/layer-control-panel";
 import { SearchControl } from "@/components/explore/search-control";
 import { TimelineShell } from "@/components/explore/timeline-shell";
@@ -82,8 +82,8 @@ export default function ExplorePage() {
 
       {/* Map and overlay controls */}
       <div className="relative flex-1">
-        {/* z-0: map */}
-        <MapShell />
+        {/* z-0: globe */}
+        <ThreeGlobe />
         {/* z-10: panels */}
         <LayerControlPanel />
         <SearchControl />

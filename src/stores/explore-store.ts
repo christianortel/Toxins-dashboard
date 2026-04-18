@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { LayerGroupId, LayerId, SearchResult } from "@/types";
 import { LAYERS, getLayersByGroup } from "@/data/layers";
+import { type CameraBand, distanceToBand, isLayerEnabledForBand } from "@/lib/map/camera-bands";
 
 interface ExploreState {
   // Layer group toggles
@@ -26,6 +27,10 @@ interface ExploreState {
   // Legend
   legendOpen: boolean;
 
+  // Camera band (derived from globe camera distance)
+  cameraBand: CameraBand;
+  cameraDistance: number;
+
   // View state
   mapCenter: [number, number];
   mapZoom: number;
@@ -43,6 +48,7 @@ interface ExploreState {
   setTimelineMode: (mode: "point" | "range") => void;
   setLegendOpen: (open: boolean) => void;
   setMapView: (center: [number, number], zoom: number) => void;
+  setCameraDistance: (dist: number) => void;
 
   // Computed-like helpers
   isLayerVisible: (layerId: LayerId) => boolean;
@@ -77,6 +83,9 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
   timelineMode: "point",
 
   legendOpen: true,
+
+  cameraBand: "national" as CameraBand,
+  cameraDistance: 2.5,
 
   mapCenter: [-98.5, 39.8] as [number, number],
   mapZoom: 4,
@@ -138,12 +147,16 @@ export const useExploreStore = create<ExploreState>((set, get) => ({
 
   setMapView: (center, zoom) => set({ mapCenter: center, mapZoom: zoom }),
 
+  setCameraDistance: (dist) =>
+    set({ cameraDistance: dist, cameraBand: distanceToBand(dist) }),
+
   // --- Computed-like helpers ---
 
   isLayerVisible: (layerId) => {
     const state = get();
     const layer = LAYERS[layerId];
     if (!layer) return false;
+    if (!isLayerEnabledForBand(layerId, state.cameraBand)) return false;
     return state.activeGroups.has(layer.group) && state.activeLayers.has(layerId);
   },
 }));

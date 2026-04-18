@@ -15,8 +15,14 @@ const layerGroupEntries = Object.values(LAYER_GROUPS) as {
   color: string;
 }[];
 
+const BAND_LABELS: Record<string, string> = {
+  national: "National",
+  regional: "Regional",
+  local: "Local",
+};
+
 export function LegendShell() {
-  const { legendOpen, setLegendOpen, activeGroups, activeLayers } =
+  const { legendOpen, setLegendOpen, activeGroups, activeLayers, cameraBand } =
     useExploreStore();
 
   const activeEntries = layerGroupEntries.filter((g) =>
@@ -38,6 +44,9 @@ export function LegendShell() {
             <Layers className="h-3 w-3 text-text-muted" />
             <span className="text-[10px] uppercase tracking-[0.12em] font-medium">
               Legend
+            </span>
+            <span className="rounded-full bg-accent-water/15 px-1.5 py-0.5 text-[9px] uppercase tracking-wider text-accent-water">
+              {BAND_LABELS[cameraBand]}
             </span>
           </div>
           <motion.div
