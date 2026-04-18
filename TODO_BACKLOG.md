@@ -7,63 +7,6 @@ Ordered by leverage. Do not re-derive this list from scratch — reconcile with
 
 ---
 
-## P0 — Globe Renderer (Core Product Gap)
-
-### [TODO] Implement Three.js 3D globe
-
-Replace the current MapLibre 2D map with a WebGL-rendered 3D sphere.
-
-Requirements:
-- Full-screen globe at `/explore` (and eventually `/`)
-- U.S. centered opening view
-- Dark map tile texture or natural earth projection
-- Canvas-backed — no DOM marker flooding
-- Entity markers rendered as WebGL points/billboards on the sphere
-- Hover + click pass-through to detail drawer
-- Integration with existing Zustand store
-
-Files to create/modify:
-- `src/components/explore/three-globe.tsx` — Three.js renderer
-- `src/components/explore/globe-shell.tsx` — replaces `map-shell.tsx`
-- `src/app/explore/page.tsx` — swap renderer
-
-Dependencies to install:
-- `three` + `@types/three`
-- `@react-three/fiber` (optional, may go raw Three.js for control)
-
----
-
-## P0 — API Routes (Data Serving)
-
-### [TODO] Implement `/api/entities` route
-
-Serve entities from DB (when available) with fallback to mock file data.
-
-Requirements:
-- GET `/api/entities?layer=&group=&bbox=&year=`
-- Returns GeoJSON FeatureCollection
-- DB-backed when PostgreSQL is running
-- Falls back to mock entities when DB is unavailable
-- Camera-band-aware: `scale` param drives selection logic
-
-### [TODO] Implement `/api/health` route
-
-Required by master spec verification contract.
-
-Returns:
-```json
-{
-  "totalEntities": N,
-  "totalLayers": 9,
-  "industrialSites": N,
-  "pfasSites": N,
-  ...
-  "dataMode": "database" | "mock"
-}
-```
-
----
-
 ## P0 — Database Population
 
 ### [TODO] Run ETL pipeline against real data sources
@@ -78,86 +21,26 @@ Priority order:
 5. `fetch_wastewater.py` — NPDES discharge monitoring
 6. `fetch_power_plants.py` — EPA eGRID
 
-Prerequisite: PostgreSQL instance running and schema applied.
+Prerequisite: PostgreSQL instance running and schema applied (`db/schema.sql`).
 
 ---
 
-## P1 — Camera Band System
+## P1 — Atlas Contract Completion
 
-### [TODO] Implement camera bands: national / regional / local
+### [TODO] Implement air-toxics region layer
 
-The globe uses explicit bands that gate which entities are visible.
+The opening national atlas targets include 5 air-toxics-region entities.
+Currently zero air-toxics entities exist in mock data.
 
-Band definitions (from master spec):
-- `national`: broadest view, quality-gated opening atlas (~49 entities)
-- `regional`: mid-zoom, expanded radius
-- `local`: radius = 120 miles, investigation-focused
+Quality gates (from master spec):
+- `epa-echo` source required
+- `legal_overlap >= 50` required
+- 5 opening regions; evaluate 6th only after real DB data
 
-Selection logic:
-- Each band has explicit per-layer counts
-- Bands change on zoom — not just CSS transform
-- `isLayerVisible()` in store needs band-awareness
-
-Files to create:
-- `src/lib/map/camera-bands.ts`
-- `src/lib/map/entity-priority.ts`
-- `src/lib/map/entity-activation.ts`
-
----
-
-## P1 — Atlas Contract
-
-### [TODO] Implement opening atlas with quality gates
-
-The broad-band opening atlas must satisfy (from master spec):
-
-| Layer | Opening count |
-|---|---|
-| industrial-sites | 17 |
-| pfas-sites | 10 |
-| wastewater-sites | 8 |
-| hazardous-sites | 1 |
-| legal-markers | 8 |
-| air-toxics-regions | 5 |
-| **Total** | **49** |
-
-Quality gates:
-- PFAS: direct points only, no aggregates, geographic diversity
-- Wastewater: prefer `epa-npdes` at broad scale
-- Hazardous: at most 1, must have strong cleanup context
-- Legal: cluster-truthful, not bland FRS registry text
-- Air: `epa-echo` required, `legal_overlap >= 50` required
-
-Files to create:
-- `src/lib/data/atlas-cache.ts`
-- `src/lib/data/query-params.ts`
-
----
-
-## P1 — Validation Harness
-
-### [TODO] Implement QA validation scripts
-
-Required scripts (from master spec):
-- `npm run qa:validate-home-atlas-cache`
-- `npm run qa:validate-live-api`
-- `npm run qa:validate-zoom-drilldown`
-- `npm run qa:validate-local-focus-priority`
-- `npm run qa:validate-browser-interactions`
-- `npm run qa:validate-pfas-coverage-notes`
-- `npm run qa:smoke`
-
----
-
-## P2 — Local Runtime Scripts
-
-### [TODO] Implement managed runtime scripts
-
-Required (from master spec):
-- `npm run local:up` — start DB + app
-- `npm run local:down` — stop all
-- `npm run local:status` — check runtime + health
-- `npm run local:verify` — full verification run
+Files to create/modify:
+- Add `air_toxics_regions` to `LayerId` type (or use `reproductive_regions` slot)
+- Add 5+ mock entries to `src/data/mock/entities.ts`
+- Update `NATIONAL_ATLAS_TARGETS` in `camera-bands.ts`
 
 ---
 
@@ -165,13 +48,24 @@ Required (from master spec):
 
 ### [TODO] Evaluate 6th air-toxics-region slot
 
-(Applies once DB is populated and atlas is implemented)
+(Applies once DB is populated and layer is implemented)
 
 Constraints:
 - Do not regress any other opening atlas count
 - `epa-echo` required
 - `legal_overlap >= 50` required
 - Only add a 6th region if it passes the same quality bar as the existing 5
+
+---
+
+## P2 — Map Shell Cleanup
+
+### [TODO] Remove or archive map-shell.tsx
+
+`src/components/explore/map-shell.tsx` still exists but is unused — ThreeGlobe
+is now the primary renderer. Decision: delete or keep as fallback.
+
+Risk: low. MapLibre dependency stays in package.json for now.
 
 ---
 
@@ -188,4 +82,21 @@ Constraints:
 - [x] Dead import cleanup, React 19 lint fixes
 - [x] fetch_tri.py upgraded to use shared ETL utils
 - [x] ETL README updated
-</content>
+- [x] Phase 4 — Three.js WebGL globe (three-globe.tsx)
+- [x] Phase 4 — API routes: /api/entities (GeoJSON), /api/health
+- [x] Phase 4 — Camera band system (camera-bands.ts)
+- [x] Phase 4 — Entity priority scoring and atlas selection (entity-priority.ts)
+- [x] Phase 4 — Legend shell updated with camera band pill
+- [x] Phase 4 — Explore store extended: cameraBand, setCameraDistance, isLayerVisible
+- [x] Phase 4 — Atlas cache pre-computation (atlas-cache.ts)
+- [x] Phase 4 — Query params builder (query-params.ts)
+- [x] Phase 4 — QA validation harness (scripts/qa/)
+  - qa:validate-home-atlas-cache (89 checks passing)
+  - qa:validate-zoom-drilldown
+  - qa:validate-local-focus-priority
+  - qa:validate-browser-interactions
+  - qa:validate-pfas-coverage-notes
+  - qa:smoke (runs all offline validators)
+- [x] Phase 4 — Local runtime scripts (scripts/local/)
+  - local:up, local:down, local:status, local:verify
+- [x] Continuity docs: PROJECT_STATUS.md, DECISIONS.md

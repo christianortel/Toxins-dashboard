@@ -6,7 +6,18 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "qa:validate-home-atlas-cache": "tsx scripts/qa/validate-home-atlas-cache.ts",
+    "qa:validate-live-api": "tsx scripts/qa/validate-live-api.ts",
+    "qa:validate-zoom-drilldown": "tsx scripts/qa/validate-zoom-drilldown.ts",
+    "qa:validate-local-focus-priority": "tsx scripts/qa/validate-local-focus-priority.ts",
+    "qa:validate-browser-interactions": "tsx scripts/qa/validate-browser-interactions.ts",
+    "qa:validate-pfas-coverage-notes": "tsx scripts/qa/validate-pfas-coverage-notes.ts",
+    "qa:smoke": "tsx scripts/qa/smoke.ts",
+    "local:up": "tsx scripts/local/up.ts",
+    "local:down": "tsx scripts/local/down.ts",
+    "local:status": "tsx scripts/local/status.ts",
+    "local:verify": "tsx scripts/local/verify.ts"
   },
   "dependencies": {
     "@deck.gl/core": "^9.2.11",
@@ -40,6 +51,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.2",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
     "typescript": "^5"
   }
 }
