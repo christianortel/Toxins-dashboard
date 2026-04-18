@@ -5,6 +5,7 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { mockEntities } from "@/data/mock/entities";
 import { useExploreStore } from "@/stores/explore-store";
+import { selectNationalAtlas } from "@/lib/map/entity-priority";
 import type { AnyMapEntity, LayerGroupId } from "@/types";
 
 // ─── Constants ────────────────────────────────────────────────────────────────
@@ -61,20 +62,28 @@ export function ThreeGlobe() {
   const activeLayers = useExploreStore((s) => s.activeLayers);
   const activeGroups = useExploreStore((s) => s.activeGroups);
   const timelineYear = useExploreStore((s) => s.timelineYear);
+  const cameraBand = useExploreStore((s) => s.cameraBand);
   const setSelectedEntity = useExploreStore((s) => s.setSelectedEntity);
 
-  // Filter entities exactly as map-shell does
+  // Filter + band-aware atlas selection
   const visibleEntities = useMemo<AnyMapEntity[]>(() => {
-    return mockEntities.filter((e) => {
+    const eligible = mockEntities.filter((e) => {
       if (!activeGroups.has(e.layerGroup)) return false;
       if (!activeLayers.has(e.layerId)) return false;
+      // Timeline
       if (e.year !== undefined) {
         const end = e.yearEnd ?? 2030;
         if (timelineYear < e.year || timelineYear > end) return false;
       }
       return true;
     });
-  }, [activeLayers, activeGroups, timelineYear]);
+
+    // At national band, apply quality-gated atlas selection
+    if (cameraBand === "national") {
+      return selectNationalAtlas(eligible);
+    }
+    return eligible;
+  }, [activeLayers, activeGroups, timelineYear, cameraBand]);
 
   // ── Initialization ──────────────────────────────────────────────────────────
   useEffect(() => {
