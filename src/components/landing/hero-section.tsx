@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { ChevronDown, ArrowDownRight } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { blurReveal, fadeInUp, fadeIn } from "@/lib/motion";
+import { HeroGlobe } from "./hero-globe";
 
 export function HeroSection() {
   return (
@@ -47,6 +48,9 @@ export function HeroSection() {
           ].join(", "),
         }}
       />
+
+      {/* 3D globe background */}
+      <HeroGlobe />
 
       <div className="relative z-10 flex flex-col items-center text-center max-w-5xl">
         {/* Headline — imposing, cinematic */}

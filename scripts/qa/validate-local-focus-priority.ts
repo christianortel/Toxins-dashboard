@@ -37,9 +37,9 @@ assert(first.id === "qa-close", "closer entity ranks first in local band");
 
 // ── Evidence level scoring is correctly ordered ───────────────────────────────
 const levels = ["direct", "proxy", "screening", "literature", "editorial"] as const;
-const syntheticBase: Omit<AnyMapEntity, "id" | "evidenceLevel"> = {
-  layerId: "pfas_sites",
-  layerGroup: "official",
+const syntheticBase = {
+  layerId: "pfas_sites" as const,
+  layerGroup: "official" as const,
   name: "QA test",
   latitude: 39.5,
   longitude: -98.5,
@@ -48,13 +48,13 @@ const syntheticBase: Omit<AnyMapEntity, "id" | "evidenceLevel"> = {
   summary: "",
   sourceIds: [],
   tags: [],
-  meta: {},
+  meta: { siteType: "qa", pfasCompounds: [], mediumTested: "water" },
 };
 
 let prevScore = Infinity;
 let scoringOk = true;
 for (const level of levels) {
-  const e: AnyMapEntity = { ...syntheticBase, id: `qa-${level}`, evidenceLevel: level };
+  const e = { ...syntheticBase, id: `qa-${level}`, evidenceLevel: level } as AnyMapEntity;
   const score = scoreEntity(e, "national");
   if (score >= prevScore) {
     scoringOk = false;
